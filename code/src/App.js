@@ -35,7 +35,7 @@ const N = 300;
     <>
        <div className="header" style={{textAlign: 'center', fontSize: '69px', fontFamily: 'Univers'}}>
            <img src={arbr} />
-           <p style={{color: '#707070'}}>terrform APIs for 1/1 Earth</p>
+           <p style={{color: '#707070'}}>terraform APIs for 1/1 Earth</p>
             <h1 className="title">🚪</h1>
        </div>
       <Globe
