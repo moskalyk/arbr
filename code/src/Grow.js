@@ -1,6 +1,5 @@
 
 // design them modules
-import defaultLogo from './images/charged-particles-logo-default-colors.svg';
 // import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import {Grid, TextField, Button} from '@material-ui/core';
