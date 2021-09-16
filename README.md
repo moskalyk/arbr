@@ -17,8 +17,8 @@ Technologies used: hands, ritual, ethereum, polygon, charged particles, filecoin
 
 ## user stories:
 
-*Physical Analog*: As a user, I want to be able to take a walk to a tree, login via geocache or wood embedding, and contribute resources to further organize value to similiar trees.
-*Digital Metamverse*: As a user, I want to be able to choose from a list of tree totems with NFTs embedded in the signature, and accrue interest with instituional resources matching interest rates to scalable carbon sequestration projects via a cognitioners attention.
+* *Physical Analog*: As a user, I want to be able to take a walk to a tree, login via geocache or wood embedding, and contribute resources to further organize value to similiar trees.
+* *Digital Metaverse*: As a user, I want to be able to choose from a list of tree totems with NFTs embedded in the signature, and accrue interest with instituional resources matching interest rates to scalable carbon sequestration projects via a cognitioners attention.
 
 ## progress (todo)
 - Designs 
@@ -26,8 +26,11 @@ Technologies used: hands, ritual, ethereum, polygon, charged particles, filecoin
 - Interface points
 - Schema Design
 
-![charge](charge.png)
+### choose totem / tree
 ![choose](choose.png)
+
+### charge trunk
+![charge](charge.png)
 
 ## reflections on project: 
 
