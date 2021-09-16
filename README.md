@@ -26,8 +26,8 @@ Technologies used: hands, ritual, ethereum, polygon, charged particles, filecoin
 - Interface points
 - Schema Design
 
-![landing](landing.png)
-![landing](landing.png)
+![charge](charge.png)
+![choose](choose.png)
 
 ## reflections on project: 
 
