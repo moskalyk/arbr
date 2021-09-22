@@ -8,8 +8,9 @@ import arbr from './images/arbr.png'
 // const OrbitControls = require('three-orbitcontrols')
 import { Link, useHistory } from 'react-router-dom'
 
+import './App.css'
 
-    const polygonsMaterial = new THREE.MeshLambertMaterial({ color: 'darkslategrey', side: THREE.DoubleSide });
+const polygonsMaterial = new THREE.MeshLambertMaterial({ color: 'darkslategrey', side: THREE.DoubleSide });
 
 
 const App = () => {
@@ -39,7 +40,7 @@ const N = 300;
        <div className="header" style={{textAlign: 'center', fontSize: '69px', fontFamily: 'Univers'}}>
            <img src={arbr} />
            <p style={{color: '#707070'}}>terraform APIs for 1/1 Earth</p>
-            <h1 className="title" onClick={() => history.push(`/choose`)}>🚪</h1>
+            <h1 className="title" onClick={() => history.push(`/choose`)}><a href="" style={{textDecoration: 'none'}}>🚪</a></h1>
        </div>
       <Globe
       backgroundColor="rgba(0,0,0,0)"

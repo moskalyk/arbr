@@ -27,7 +27,7 @@ ReactDOM.render(
           <Route path="/choose" exact>
             <Choose />
           </Route>
-          <Route path="/grow" exact>
+          <Route path="/grow/:tree" exact>
             <Grow />
           </Route>
           <Route path="/" exact>

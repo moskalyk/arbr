@@ -26,11 +26,8 @@
 
 
 html, body, svg {
-  width:50%;
-  height:50%;
   margin:0;
   padding:0;
-  background:#000;
 }
 
 .stage {
@@ -60,4 +57,37 @@ button {
 .globe {
   height: calc(100vh - 35px);
   width: 100%
+}
+
+.choose-header {
+  margin:  69px;
+  text-align: center;
+}
+
+.tree-tile:hover {
+  cursor: pointer;
+}
+
+h2 {
+  margin: 0px;
+  font-size: 3em;
+  font-family: serif;
+  color: #008000;
+  text-align: center;
+  animation: animate 
+      4.2s linear infinite;
+}
+
+@keyframes animate {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }

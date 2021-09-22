@@ -345,7 +345,7 @@ const Grow = () => {
           <Grid container direction="column" alignContent='center'>
             <Grid item>
               <Typography variant="subtitle1" style={{textAlign: "center", paddingTop: '70px'}}>
-                WWW
+                <h2>💧</h2>
               </Typography>
             </Grid>
             <Account /*id={id} setModal={setModal}*/ />
