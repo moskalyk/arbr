@@ -91,3 +91,13 @@ h2 {
         opacity: 0;
     }
 }
+
+#standard-basic{
+  height: 33px;
+}
+
+.graft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

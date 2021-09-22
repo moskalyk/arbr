@@ -1,10 +1,11 @@
 
 // design them modules
 // import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
-import {Grid, TextField, Button} from '@material-ui/core';
-import { ThemeProvider } from '@material-ui/core/styles';
-import theme from './root.theme';
+import Typography from '@mui/material/Typography';
+import {Grid, TextField} from '@mui/material';
+import Button from '@mui/material/Button';
+// import { ThemeProvider } from '@mui/material/styles';
+// import theme from './root.theme';
 
 // Wallet modules
 import { Web3ReactProvider } from '@web3-react/core'
@@ -176,7 +177,7 @@ export const Wallet = (props) => {
           <div> 💧 </div>
         </div>
       ) : (
-        <Button variant="contained" color="primary" name="connect" style={{marginLeft: '8px'}} onClick={() => onActivateClick()}>⎈</Button>
+        <Button variant="outlined" onClick={() => onActivateClick()}>⎈</Button>
       )}
     </div>
   )
@@ -340,7 +341,6 @@ const Grow = () => {
   }
 
   return (
-    <ThemeProvider theme={{ ...theme }}>
       <main>
           <Grid container direction="column" alignContent='center'>
             <Grid item>
@@ -350,25 +350,28 @@ const Grow = () => {
             </Grid>
             <Account /*id={id} setModal={setModal}*/ />
           </Grid>
+          <br/>
           <Grid container direction="column" alignContent='center'>
             <Grid item lg="6">
-              <br/>
-              <TextField id="standard-basic" value={particleValue} label="charge" style={{marginLeft: '225px', width: '175px'}}onChange={e => setParticleValue(e.target.value)}/>
-              <br/>
-              <Button variant="contained" color="primary" onClick={plantCPTree} style={{marginLeft: '205px', padding: '20px'}}>
+              <Button variant="outlined" onClick={plantCPTree} style={{ padding: '20px', margin: '10px', marginLeft: '76px'}}>
                 (A) Seed
               </Button>
-              <Button variant="contained" color="blue" onClick={connectBluberry} style={{ padding: '20px', margin: '20px'}}>
+              <TextField id="standard-basic" value={particleValue} label="charge" style={{ height: '33px !important', margin: '10px'}}onChange={e => setParticleValue(e.target.value)}/>
+              <Button variant="outlined" onClick={connectBluberry} style={{ padding: '20px', margin: '10px'}}>
                 (B) Connect
               </Button>
-              <p style={{textAlign: 'center', fontSize: '30px'}}>🌱</p>
+              <br/>
+              <div className="graft">
+              <Button variant="outlined" style={{textAlign: 'center', padding: '20px', margin: '10px'}}>
+                 🌱
+              </Button>
+              </div>
               <p style={{textAlign: 'center', fontSize: '30px'}}>⥥</p>
               <Tree className="stage"/>
             </Grid>
           </Grid>
 
         </main>
-    </ThemeProvider>
   );
 }
 

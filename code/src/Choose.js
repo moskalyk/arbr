@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import {useEffect, useState} from 'react';
 import { Link, useHistory } from 'react-router-dom'
-
+import CPPort from './nftport/index.js'
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -21,7 +21,14 @@ const Choose = () => {
   	const [loaded, setLoaded] = useState(false)
   	const [tiles, setTiles] = useState([])
 
-	useEffect(() => {
+	useEffect(async () => {
+		const apiKey = ''
+		const cpPort = new CPPort(apiKey)
+
+		const photonAddress = ''
+		const ethersProvider = 
+		console.log(await cpPort.getCloud(photonAddress))
+
 		// load trees from nft port
 		trees = [
 				['1', 'A'],
