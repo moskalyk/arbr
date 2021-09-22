@@ -1,30 +1,40 @@
-![logo](./assets/charged-particles-logo-default-colors.svg)
+# 🌳 ArBr ⚙️
 
-# Frontend Engineering Challenge
+terraform APIs for 1/1 Earth. have your computer. use the door.
 
-## Overview
+![landing](landing.png)
+![globe](globe.png)
 
-Thank you for your interest in Charged Particles! The purpose of this challenge is to assess potential new team members' frontend engineering and Web3 skills. This challenge consists of 2 parts and may be followed by a short call with a team member to walk through your thought process and code. The first part is the coding challenge itself, in which you will connect to our contracts, mint a Proton, and display it on the UI.
+## background
+let this be a queued-up snapshot into current progress of this project for where things are at and where things are going as entrance into the Ethonline hackathon. The overstory behind the project is long, but meaningful to me via [deep6.org](deep6.org). it began with a few coherence points in software alchemical ideation in the various ethereum global events.
+* [gov10](https://youtu.be/_YaIWFzAqbg) was a land based phenomonen meant to unit people around shared bioregional clusters using money markets. 
+* [m2m](https://www.youtube.com/watch?v=SY_ZUN1geeQ) was a personal generator function for bci interface data where AI models are stored locally first, to be used by other [activities](https://youtu.be/uozM-vpuBUs). 
+* [eth(OS)tep](https://youtu.be/0ldbJx85HbA?t=61) is a collective hastas ritual physical clock looking that aims to solve climate as a data flow problem. 
 
-Feel free to solve these questions however you see fit, using whatever coding style or third-party libraries you think are appropriate.
+all these projects will converge on the arbr protocol in a simplified smart contract implementation, with a prime focus on eth(OS)tep.
 
-## Rules
+Technologies used: hands, ritual, ethereum, polygon, charged particles, filecoin, fluence network
 
-1. You have 3 days to complete this challenge, please reach out to sam@charged.fi if this timeline does not work for you.
-2. No cheating or plagiarism -- if you use a code snippet from another source please include a source as well as a comment within the code itself explaining how the code works. That being said, we prefer you use entirely original code.
-3. Applicants must complete all parts of the challenge, including the self-assessment.
+## user stories:
 
-## Success Criteria
+* *Physical Analog*: As a user, I want to be able to take a walk to a tree, login via geocache or wood embedding, and contribute resources to further organize value to similiar trees.
+* *Digital Metaverse*: As a user, I want to be able to choose from a list of tree totems with NFTs embedded in the signature, and accrue interest with instituional resources matching interest rates to scalable carbon sequestration projects via a cognitioners attention.
 
-Successful submissions will contain:
+## progress (todo)
+- Designs 
+- Modules (NFTPort)
+- Interface points
+- Schema Design
 
-- a well-functioning, visually appealing solution to the coding challenge
-- clean, well-organized code
-- clearly written responses to the self-assessment
+### choose totem / tree
+![choose](choose.png)
 
-## Instructions
+### charge trunk
+![charge](charge.png)
 
-1. Fork and clone this repository
-2. Complete the coding challenge. A markdown file with specific requirements and starter code for the challenge can be found in `./code`.
-3. Answer all questions in the `self-assessment.md` file.
-4. Once you've completed the test, please compress your files (via zip or tar) and return them as a link or email attachment in reply to your test invite. **We'd like the code in your submission to remain private, so please avoid committing or pushing the code publicly.**
+## reflections on project: 
+
+I’ve always wanted to roll the stake of hackathons forward not just with presence or financial, but also composable pieces that might fit together with pieces along the way. Working on this. Allow the affordances of storytelling to merge via this critical artwork.
+
+Always looking for more developer help on this adventure, together.
+
