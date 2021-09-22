@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import {useEffect, useState} from 'react';
 import { Link, useHistory } from 'react-router-dom'
-import CPPort from './nftport/index.js'
+import CPPort from './cpport/index.js'
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -12,6 +12,16 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
+
+
+const TagList = (props) => {
+
+	const list = props.tags.map((tag, i) => {
+		return <p key={i}>{tag}</p>
+	})
+	const shortList = list.slice(0,5) // sorry 
+	return(<div>{shortList}</div>)
+}	
 
 const Choose = () => {
 	let trees;
@@ -26,25 +36,28 @@ const Choose = () => {
 		const cpPort = new CPPort(apiKey)
 
 		const photonAddress = ''
-		const ethersProvider = 
-		console.log(await cpPort.getCloud(photonAddress))
+		const ethersProvider = ''
 
-		// load trees from nft port
 		trees = [
 				['1', 'A'],
 				['2', 'B'],
 				['3', 'C']
 			]
 
-		let tilesTemp = trees.map((el) => {
-			return el.map((tag) => {
+		// load trees from nft port
+		if(!loaded){
+			// right now a flat array, but will be MxN
+			const tags = await cpPort.getCloud(photonAddress)
+			trees[0] = tags;
+
+			let tilesTemp = trees.map((tags) => {
 				return <Grid item xs={4}>
-					    <Item className="tree-tile" style={{height: '244px', hover:'pointer'}} onClick={() => history.push(`/grow/${el}`)}>{el}</Item>
+					    <Item className="tree-tile" style={{height: '244px', hover:'pointer'}} onClick={() => history.push(`/grow/${tags[0]}`)}><TagList tags={tags}/></Item>
 					  </Grid>
 			})
-		})
-		setLoaded(true)
-		setTiles(tilesTemp)
+			setLoaded(true)
+			setTiles(tilesTemp)
+		}
 	}, [loaded,tiles])
 
 

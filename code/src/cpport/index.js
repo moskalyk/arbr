@@ -40,6 +40,8 @@ class CPPort {
 		}
 
 		if(res){
+			console.log('nlp')
+			console.log(nlp('the quick brown fox'))
 			res.data.images.map((cp) => {
 				// make call on raw_metadata
 				// loop through text
