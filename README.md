@@ -32,6 +32,9 @@ Technologies used: hands, ritual, ethereum, polygon, charged particles, filecoin
 ### charge trunk
 ![charge](charge.png)
 
+### inspect totem likeness & project
+![purchase](purchase.png)
+
 ## reflections on project: 
 
 I’ve always wanted to roll the stake of hackathons forward not just with presence or financial, but also composable pieces that might fit together with pieces along the way. Working on this. Allow the affordances of storytelling to merge via this critical artwork.
