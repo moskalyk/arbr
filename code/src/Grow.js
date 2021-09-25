@@ -24,6 +24,11 @@ import { Link, useHistory } from 'react-router-dom'
 
 import BlueberryDevice from './peripherals/BlueberryConnect.js'
 
+import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
+import 'react-vertical-timeline-component/style.min.css';
+
+import { NFTE } from '@nfte/react';
+
 // gsap
 import { gsap } from "gsap";
 
@@ -63,6 +68,7 @@ export const injectedConnector = new InjectedConnector({
     4, // Rinkeby
     5, // Goerli
     42, // Kovan
+    137, // Polygon
   ],
 })
 
@@ -132,6 +138,9 @@ export const Wallet = (props) => {
           props.setAccount(account)
         }
 
+        console.log('props.setIsReady')
+        console.log(props.setIsReady)
+        props.setIsReady(true)
           console.log('---------')
         cpTree = new ethers.Contract(cpTreeAddress, CPTree, ethersProvider.getSigner())
           console.log('---------')
@@ -196,7 +205,7 @@ const Account = (props) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       {props.base ? '' : <p>{}</p> }
-      <Wallet balance={balance} setBigbalance={setBigbalance} setBalance={setBalance} setAccount={setAccount}/>
+      <Wallet setIsReady={props.setIsReady} balance={balance} setBigbalance={setBigbalance} setBalance={setBalance} setAccount={setAccount}/>
       {/*wallet*/}
       {/*approve*/}
       {/*deposit*/}
@@ -209,9 +218,9 @@ const Tree = () => {
 
   useEffect(() => {
 
-    setTimeout((nPoly) => {
-      nPoly=nPoly+5
-    }, 2000, nPoly)
+    // setTimeout((nPoly) => {
+    //   nPoly=nPoly
+    // }, 2000, nPoly)
 
   for (let i=1; i<=nPoly; i++){ //make + animate empty polygon elements
     let p = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
@@ -254,8 +263,12 @@ const Grow = () => {
   const [blueberry, setBlueberry] = useState({})
   const [isOnline, setIsOnline] = useState(false)
   const [isSeeded, setIsSeeded] = useState(false)
+  const [contract, setContract] = useState('')
+  const [bonds, setBonds] = useState([])
+  const [isReady, setIsReady] = useState(false)
+  const [totem, setTotem] = useState([])
 
-  useEffect(() => {
+  useEffect(async () => {
 
     setInterval(() => {
       // check to see that it is connected 
@@ -273,36 +286,87 @@ const Grow = () => {
       // get charge
     },1000)
 
-  },[blueberry, isSeeded, ethersProvider])
+    if(isReady){
+      // const endpoint = 'https://api.thegraph.com/subgraphs/name/charged-particles/kovan-universe';
+      const endpoint = 'https://api.thegraph.com/subgraphs/name/charged-particles/polygon-universe';
+      const res = await doGraphRequest(endpoint, query);
+      // const { protonToken } = res.universes[0];
+      console.log(res);
+      console.log(res.genericSmartBaskets[0].tokenBalances[0].nftTokenAddress);
+      console.log(res.genericSmartBaskets[0].tokenBalances[0].nftTokenIds);
+      const covBonds = res.genericSmartBaskets[0].tokenBalances[0].nftTokenIds
+      const covalentAddress = res.genericSmartBaskets[0].tokenBalances[0].nftTokenAddress
+      setBonds(covBonds)
+      setContract(covalentAddress)
+      console.log("BONDS")
+
+      // for()
+      const covalentBondsPromiseArray = covBonds.map(async (id) => {
+        console.log('contract')
+        console.log(covalentAddress)
+        console.log(id)
+        const mediaUrl = await getTokenURI(covalentAddress,id.toString())
+        console.log(mediaUrl)
+        return {
+          id: id,
+          media: mediaUrl
+        }
+      })
+
+    const covalentBonds = await Promise.all(covalentBondsPromiseArray)
+        
+    const totems = covalentBonds.map((bond) => {
+        console.log(`ID - ${bond.id}, Media - ${bond.media}`)
+        return <VerticalTimelineElement
+                    className="vertical-timeline-element--work"
+                    contentStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+                    contentArrowStyle={{ borderRight: '7px solid  rgb(33, 150, 243)' }}
+                    date="2011 - present"
+                    iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+                    style={{width: '914px'}}
+                  >
+                  <h3 className="vertical-timeline-element-title">Creative Director</h3>
+                  {/*<NFTE contract="0xe2a9b15e283456894246499fb912cce717f83319" tokenId="303"/>*/}
+                  <img src={bond.media} />
+                </VerticalTimelineElement>
+    })
+
+    console.log(totems)
+
+      setTotem(totems)
+    }else{
+      console.log('NOT_READY')
+    }
+
+  },[blueberry, isSeeded, ethersProvider, isReady])
+
   const query = gql`
-    {
-     universes {
-       protonToken {
-         tokens(first:20) {
-           name,
-           tokenId,
-           id
-           creator,
-           owner,
-           salePrice,
-           lastSalePrice,
-         }
-       }
-     }
-    }`
+      {
+        genericSmartBaskets(where: {tokenId: 50}) {
+          ...genericSmartBasketFragment
+        }
+      }
+
+
+      fragment genericSmartBasketFragment on GenericSmartBasket {
+        id
+        contractAddress
+        tokenId
+        address
+        totalTokens
+        tokenBalances {
+          id
+          nftTokenAddress
+          nftTokenIds
+        }
+      }
+    `
  
   const doGraphRequest = (endpoint, query, variables={}) => new Promise((resolve, reject) => {
     request(endpoint, query, variables)
       .then((data) => resolve(data))
       .catch(err => reject(err));
   });
-
-  setTimeout(async () => {
-    const endpoint = 'https://api.thegraph.com/subgraphs/name/charged-particles/kovan-universe';
-    const res: any = await doGraphRequest(endpoint, query);
-    const { protonToken } = res.universes[0];
-    console.log(protonToken);
-  }, 2000)
 
   const plantCPTree = async () => {
     console.log('planting tree')
@@ -340,6 +404,28 @@ const Grow = () => {
     setIsOnline(true)
   }
 
+  const getTokenURI = async (tokenContract, tokenId) => {
+  try {
+    const contractABI = [
+      "function tokenURI(uint256 _tokenId) external view returns (string memory)",
+    ];
+    const contractObject = new ethers.Contract(
+      tokenContract,
+      contractABI,
+      ethersProvider.getSigner()
+    );
+
+    const result = await contractObject.tokenURI(tokenId);
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
+  const chargeTokens = []
+
+  const timelineElements = []
+
   return (
       <main>
           <Grid container direction="column" alignContent='center'>
@@ -348,11 +434,11 @@ const Grow = () => {
                 <h2>💧</h2>
               </Typography>
             </Grid>
-            <Account /*id={id} setModal={setModal}*/ />
+            <Account /*id={id} setModal={setModal}*/ setIsReady={setIsReady} />
           </Grid>
           <br/>
-          <Grid container direction="column" alignContent='center'>
-            <Grid item lg="6">
+          <Grid container direction="column" alignContent='center' >
+            <Grid item lg="6" style={{paddingLeft: '150px'}}>
               <Button variant="outlined" onClick={plantCPTree} style={{ padding: '20px', margin: '10px', marginLeft: '76px'}}>
                 (A) Seed
               </Button>
@@ -367,12 +453,51 @@ const Grow = () => {
               </Button>
               </div>
               <p style={{textAlign: 'center', fontSize: '30px'}}>⥥</p>
-              <Tree className="stage"/>
+              {bonds ? <Tree className="stage" style={{paddingLeft: '150px'}}/> : null}
+              <h2>🪵</h2>
+              <VerticalTimeline>
+                  {totem}
+              </VerticalTimeline>
+              <Footer online={true} onlineCount={3} treeCount={3} mb={342}/>
             </Grid>
           </Grid>
 
         </main>
   );
+}
+
+const Totem = (props) => {
+  console.log(props)
+  let timelineItems = []
+
+  try {
+    timelineItems = props.bonds.tokens.map((token) => {
+        return <p>{token.address}</p>
+    })
+  }catch(e){
+    console.log(e)
+  }
+
+  console.log(timelineItems)
+
+  return(
+    <>
+      <h2>🪵</h2>
+      <div>{timelineItems}</div>
+    </>
+    )
+}
+
+const Footer = (props) => {
+  console.log(props)
+
+  const onlineCount = 3
+
+  return(
+    <div className="footer">
+      {props.online ? <p>{props.treeCount} 🌳 / min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🟢 {props.onlineCount} / 9 online&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.mb} mb/s 💽  </p> :  <p>🚫</p>}
+    </div>
+  )
 }
 
 export default Grow;

@@ -64,7 +64,7 @@ const Choose = () => {
 	return(
 		<div>
 		<div style={{margin: '69px', textAlign: 'center'}}>
-			📦
+			🚪
 			<br/>
 			<br/>
 			<br/>
