@@ -28,6 +28,7 @@ import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timel
 import 'react-vertical-timeline-component/style.min.css';
 
 import { NFTE } from '@nfte/react';
+import axios from 'axios'
 
 // gsap
 import { gsap } from "gsap";
@@ -307,9 +308,12 @@ const Grow = () => {
         console.log(id)
         const mediaUrl = await getTokenURI(covalentAddress,id.toString())
         console.log(mediaUrl)
+        const metadata = await axios(mediaUrl)
+        console.log(metadata)
+        console.log(metadata.data.image)
         return {
           id: id,
-          media: mediaUrl
+          media: metadata.data.image
         }
       })
 
@@ -327,7 +331,7 @@ const Grow = () => {
                   >
                   <h3 className="vertical-timeline-element-title">Creative Director</h3>
                   {/*<NFTE contract="0xe2a9b15e283456894246499fb912cce717f83319" tokenId="303"/>*/}
-                  <img src={bond.media} />
+                  <img src={bond.media} width={'200px'}/>
                 </VerticalTimelineElement>
     })
 
