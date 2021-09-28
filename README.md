@@ -50,7 +50,7 @@ and then moves on”
 
 — Carl Sandburg
 
-![lion_forest](lion_forest.png)
+![lion_forest](lion_forest.jpg)
 
 #### *Fox*
 the Ceramic Identity service that holds the DID and tree graph of spirit totems mapped to charged particles.
@@ -59,12 +59,12 @@ Totem Symbolism : “Nearly every culture regards Fox symbolism as including 
 
 Ideal Galactic Tree Steward entry point as the Fox central point of DID registry for signing into a tree.
 
-![star_fox](star_fox.png)
+![star_fox](star_fox.jpeg)
 
 #### *Faun*
 the Measurement service implemented. As seen as the similar abstraction to the side-car IPFS nodes, these mythical creatures.  Totem Symbolism : Rustic music twines through the tree branches of ancient Greece, the kind of music that makes men forget their worries and women fall in love. Fauns pipe this music through the trees, and they are just as carefree and romantic as their own songs. The Faun is a representation of grace, beauty, essence, and illumination. You are being requested to follow the wisdom of yourself and continue forward.
 
-![faun](faun.png)
+![faun](faun.jpeg)
 
 #### *Arbr* - the underlying protocol of the forest, that interacts with the charged particle ecosystem representing the molecular memetic genes that will accrue value.
 
