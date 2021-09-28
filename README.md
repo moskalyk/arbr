@@ -43,12 +43,14 @@ Textile caching service & bio-signature local aggregating service. Can be though
 
 Totem Symbolism : 1. Illusion vs Reality. Fog symbolism is often used as a symbol that's stuck somewhere between reality and illusion. 2. Uncertainty. Driving in fog can be dangerous because we're not sure what lies only a few meters in front of us. 3. Mystery.
 
+```
 “The fog comes
 on little cat feet
 it sits looking
 and then moves on”
 
 — Carl Sandburg
+```
 
 ![lion_forest](lion_forest.jpg)
 
