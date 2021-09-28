@@ -59,16 +59,19 @@ the Ceramic Identity service that holds the DID and tree graph of spirit totems 
 
 Totem Symbolism : “Nearly every culture regards Fox symbolism as including stealthy, near-silent movement because the creature is so well-acclimated to the space it inhabits. Immediately, Fox represents slyness, elusiveness, the mysterious, and adaptability.”
 
-Ideal Galactic Tree Steward entry point as the Fox central point of DID registry for signing into a tree.
+'Ideal' Galactic Tree Steward entry point as the central point of DID registry for signing into a tree, uses the Fox composition.
 
 ![star_fox](star_fox.jpeg)
 
 #### *Faun*
-the Measurement service implemented. As seen as the similar abstraction to the side-car IPFS nodes, these mythical creatures.  Totem Symbolism : Rustic music twines through the tree branches of ancient Greece, the kind of music that makes men forget their worries and women fall in love. Fauns pipe this music through the trees, and they are just as carefree and romantic as their own songs. The Faun is a representation of grace, beauty, essence, and illumination. You are being requested to follow the wisdom of yourself and continue forward.
+the Measurement service implemented. As seen as the similar abstraction to the side-car IPFS nodes, these mythical creatures / service push data across the network.
+
+Totem Symbolism : Rustic music twines through the tree branches of ancient Greece, the kind of music that makes men forget their worries and women fall in love. Fauns pipe this music through the trees, and they are just as carefree and romantic as their own songs. The Faun is a representation of grace, beauty, essence, and illumination. You are being requested to follow the wisdom of yourself and continue forward.
 
 ![faun](faun.jpeg)
 
-#### *Arbr* - the underlying protocol of the forest, that interacts with the charged particle ecosystem representing the molecular memetic genes that will accrue value.
+#### *Arbr*
+The underlying protocol of the forest, that interacts with the charged particle ecosystem representing the molecular memetic genes that will accrue value.
 
 These various abstractions based on their shape live in various computing tools, representing the contextual shape of Things & services in the ecosystem. The meme + Arbor + memory can be though of a memeory. As the tooling assist moves up the track, the higher intelligence-like entities are formed.
 
