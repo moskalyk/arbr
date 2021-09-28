@@ -64,7 +64,7 @@ Totem Symbolism : “Nearly every culture regards Fox symbolism as including 
 ![star_fox](star_fox.jpeg)
 
 #### *Faun*
-the Measurement service implemented. As seen as the similar abstraction to the side-car IPFS nodes, these mythical creatures / service push data across the network.
+the measurement service implemented to record the file size calculations. As seen as the similar abstraction to the side-car IPFS nodes, these mythical creatures / services push data & make recordings across the network.
 
 Totem Symbolism : Rustic music twines through the tree branches of ancient Greece, the kind of music that makes men forget their worries and women fall in love. Fauns pipe this music through the trees, and they are just as carefree and romantic as their own songs. The Faun is a representation of grace, beauty, essence, and illumination. You are being requested to follow the wisdom of yourself and continue forward.
 
