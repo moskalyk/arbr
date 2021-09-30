@@ -27,11 +27,27 @@ import BlueberryDevice from './peripherals/BlueberryConnect.js'
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 
-import { NFTE } from '@nfte/react';
 import axios from 'axios'
 
-// gsap
+// modal
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+
 import { gsap } from "gsap";
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+// gsap
 
 let pts, nPts = gsap.utils.random(9,11,1)
 
@@ -39,6 +55,8 @@ let nPoly = 5
 let radius = 180
 
 let ethersProvider;
+
+
 
 function getRings(){
   // perform smart contract call to get the charge of the particles for the tree nft
@@ -195,7 +213,7 @@ export const Wallet = (props) => {
 
 
 const Account = (props) => {
-  const [account, setAccount ] = useState('')
+  // const [account, setAccount ] = useState('')
   const [balance, setBalance ] = useState(0)
   const [bigbalance, setBigbalance ] = useState(0)
   const [approved, setApproved ] = useState(false)
@@ -206,12 +224,47 @@ const Account = (props) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       {props.base ? '' : <p>{}</p> }
-      <Wallet setIsReady={props.setIsReady} balance={balance} setBigbalance={setBigbalance} setBalance={setBalance} setAccount={setAccount}/>
+      <Wallet setIsReady={props.setIsReady} balance={balance} setBigbalance={setBigbalance} setBalance={setBalance} setAccount={props.setAccount}/>
       {/*wallet*/}
       {/*approve*/}
       {/*deposit*/}
     </Web3ReactProvider>
   )
+}
+
+function BasicModal(props) {
+  const [open, setOpen] = useState(false);
+  const [owned, setOwned] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+
+  useEffect(() => {
+    // TODO: rarible felt-eagle use, looks rare
+      const owned = []
+  })
+
+  return (
+    <div>
+      <Button onClick={handleOpen}>Open modal</Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            🌰 { /*The acorn is associated with prosperity and longevity, due to the long life of the oak */}
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {props.address}
+            {owned}
+          </Typography>
+        </Box>
+      </Modal>
+    </div>
+  );
 }
 
 const Tree = () => {
@@ -268,6 +321,8 @@ const Grow = () => {
   const [bonds, setBonds] = useState([])
   const [isReady, setIsReady] = useState(false)
   const [totem, setTotem] = useState([])
+  const [treeCount, setTreeCount] = useState(0)
+  const [account, setAccount] = useState('')
 
   useEffect(async () => {
 
@@ -282,10 +337,19 @@ const Grow = () => {
     setInterval(async ()=>{
       // isSeeded
       if(isSeeded){
-        console.log('charging...')
+        // console.log('charging...')
       }
       // get charge
     },1000)
+
+    if(isOnline){
+      setInterval(async ()=>{
+        // isSeeded
+          setTreeCount(treeCount + 1)
+          console.log('charging...')
+        // get charge
+      },1000)
+    }
 
     if(isReady){
       // const endpoint = 'https://api.thegraph.com/subgraphs/name/charged-particles/kovan-universe';
@@ -323,13 +387,13 @@ const Grow = () => {
         console.log(`ID - ${bond.id}, Media - ${bond.media}`)
         return <VerticalTimelineElement
                     className="vertical-timeline-element--work"
-                    contentStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-                    contentArrowStyle={{ borderRight: '7px solid  rgb(33, 150, 243)' }}
+                    contentStyle={{ background: 'rgb(221 181 150)', color: '#fff' }}
+                    contentArrowStyle={{ borderRight: '7px solid  rgb(221 181 150)' }}
                     date="2011 - present"
-                    iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-                    style={{width: '914px'}}
+                    iconStyle={{ background: 'rgb(221 181 150)', color: '#fff' }}
+                    style={{width: '714px'}}
                   >
-                  <h3 className="vertical-timeline-element-title">Creative Director</h3>
+                  <h3 className="vertical-timeline-element-title">Token Id: {bond.id}</h3>
                   {/*<NFTE contract="0xe2a9b15e283456894246499fb912cce717f83319" tokenId="303"/>*/}
                   <img src={bond.media} width={'200px'}/>
                 </VerticalTimelineElement>
@@ -342,7 +406,7 @@ const Grow = () => {
       console.log('NOT_READY')
     }
 
-  },[blueberry, isSeeded, ethersProvider, isReady])
+  },[blueberry, isSeeded, ethersProvider, isReady, treeCount])
 
   const query = gql`
       {
@@ -389,6 +453,7 @@ const Grow = () => {
 
   const connect_cb = () => {
     console.log('CONNECTED')
+    setIsOnline(true)
   }
 
   const disconnect_cb = () => {
@@ -438,11 +503,11 @@ const Grow = () => {
                 <h2>💧</h2>
               </Typography>
             </Grid>
-            <Account /*id={id} setModal={setModal}*/ setIsReady={setIsReady} />
+            <Account setAccount={setAccount} setIsReady={setIsReady} />
           </Grid>
           <br/>
           <Grid container direction="column" alignContent='center' >
-            <Grid item lg="6" style={{paddingLeft: '150px'}}>
+            <Grid item lg="6" >
               <Button variant="outlined" onClick={plantCPTree} style={{ padding: '20px', margin: '10px', marginLeft: '76px'}}>
                 (A) Seed
               </Button>
@@ -455,16 +520,18 @@ const Grow = () => {
               <Button variant="outlined" style={{textAlign: 'center', padding: '20px', margin: '10px'}}>
                  🌱
               </Button>
+              <BasicModal address={account}/>
               </div>
               <p style={{textAlign: 'center', fontSize: '30px'}}>⥥</p>
-              {bonds ? <Tree className="stage" style={{paddingLeft: '150px'}}/> : null}
+              {bonds ? <Tree className="stage"/> : null}
               <h2>🪵</h2>
-              <VerticalTimeline>
+              <VerticalTimeline styl={{width: '100%'}}>
                   {totem}
               </VerticalTimeline>
-              <Footer online={true} onlineCount={3} treeCount={3} mb={342}/>
+              <Footer online={isOnline} onlineCount={1} treeCount={treeCount} mb={342}/>
             </Grid>
           </Grid>
+
 
         </main>
   );
@@ -499,7 +566,7 @@ const Footer = (props) => {
 
   return(
     <div className="footer">
-      {props.online ? <p>{props.treeCount} 🌳 / min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🟢 {props.onlineCount} / 9 online&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.mb} mb/s 💽  </p> :  <p>🚫</p>}
+      { props.online ? <p>{props.treeCount} 🌳 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;🟢 {props.onlineCount} / 9 online&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{props.mb} mb/s 💽  </p> :  <p>🚫</p>}
     </div>
   )
 }

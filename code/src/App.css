@@ -31,7 +31,6 @@ html, body, svg {
 }
 
 .stage {
-  width: 1000px !important;
     margin: auto !important;
     padding-left: 300px !important;
 }
