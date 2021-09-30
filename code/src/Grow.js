@@ -35,6 +35,12 @@ import Modal from '@mui/material/Modal';
 
 import { gsap } from "gsap";
 
+const Moralis = require('moralis');
+
+Moralis.initialize("w02slE4q4m9JUWC4fG6fmxIdiaXc3T0oSAJAmgns");
+
+Moralis.serverURL = 'https://4ppxinbfjmtg.moralishost.com:2053/server'
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -154,8 +160,10 @@ export const Wallet = (props) => {
           console.log(balance.toString())
           props.setBigbalance(balance)
           props.setBalance(formattedValue(balance, 18))
-          props.setAccount(account)
         }
+          console.log('ACCOUNT_IN_WALLET')
+          console.log(account)
+          props.setAccount(account)
 
         console.log('props.setIsReady')
         console.log(props.setIsReady)
@@ -220,7 +228,7 @@ const Account = (props) => {
   const history = useHistory();
 
   console.log(props.id)
-  console.log(account)
+  // console.log(account)
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       {props.base ? '' : <p>{}</p> }
@@ -239,14 +247,26 @@ function BasicModal(props) {
   const handleClose = () => setOpen(false);
 
 
-  useEffect(() => {
+  useEffect(async () => {
     // TODO: rarible felt-eagle use, looks rare
       const owned = []
+      console.log('BASIC_MODAL_ADDRESS')
+      console.log(props.address)
+
+      // get NFTs for current user on Mainnet
+      const userEthNFTs = await Moralis.Web3API.account.getNFTs();
+      console.log(userEthNFTs)
+
+      // get polygon NFTs for address
+      const options = { chain: 'matic', address: props.address };
+      const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);
+      console.log(polygonNFTs)
   })
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button variant="outlined" style={{textAlign: 'center', padding: '20px', margin: '10px'}} onClick={handleOpen}>🌱</Button>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -517,9 +537,6 @@ const Grow = () => {
               </Button>
               <br/>
               <div className="graft">
-              <Button variant="outlined" style={{textAlign: 'center', padding: '20px', margin: '10px'}}>
-                 🌱
-              </Button>
               <BasicModal address={account}/>
               </div>
               <p style={{textAlign: 'center', fontSize: '30px'}}>⥥</p>
