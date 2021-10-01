@@ -147,6 +147,12 @@ export const Wallet = (props) => {
     useEffect(async () => {
       console.log(`use effect -- account: ${account}`)
       console.log(ethersProvider)
+
+      Moralis.authenticate().then(function (user) {
+          console.log('MORALIS_USER_ADDRESS')
+          console.log(user.get('ethAddress'))
+      })
+
       if(ethersProvider){
       console.log(ethersProvider.getSigner())
 
@@ -254,13 +260,18 @@ function BasicModal(props) {
       console.log(props.address)
 
       // get NFTs for current user on Mainnet
-      const userEthNFTs = await Moralis.Web3API.account.getNFTs();
-      console.log(userEthNFTs)
+      // const userEthNFTs = await Moralis.Web3API.account.getNFTs();
+      // console.log(userEthNFTs)
 
       // get polygon NFTs for address
       const options = { chain: 'matic', address: props.address };
       const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);
-      console.log(polygonNFTs)
+
+      polygonNFTs.result.map((nft) => {
+        console.log(nft)
+        console.log(getTokenURI(nft.address, nft.token_id))
+      })
+      console.log(polygonNFTs.result)
   })
 
   return (
