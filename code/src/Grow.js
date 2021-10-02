@@ -255,6 +255,14 @@ function BasicModal(props) {
 
   useEffect(async () => {
     // TODO: rarible felt-eagle use, looks rare
+
+  }, props.isReady)
+
+  const graft = async () => {
+
+    if(props.isReady){
+
+
       const owned = []
       console.log('BASIC_MODAL_ADDRESS')
       console.log(props.address)
@@ -267,12 +275,27 @@ function BasicModal(props) {
       const options = { chain: 'matic', address: props.address };
       const polygonNFTs = await Moralis.Web3API.account.getNFTs(options);
 
-      polygonNFTs.result.map((nft) => {
+      const ownedPromises = polygonNFTs.result.map(async (nft) => {
+        if(nft.token_id.length < 10){
+        console.log('NFT')
         console.log(nft)
-        console.log(getTokenURI(nft.address, nft.token_id))
+
+        const mediaUrl = await getTokenURI(nft.token_address, nft.token_id)
+
+        console.log(mediaUrl)
+        const metadata = await axios(mediaUrl)
+
+        return <img src={metadata.data.image} />
+        }
       })
-      console.log(polygonNFTs.result)
-  })
+
+
+      const ownedNFTs = await Promise.all(ownedPromises)
+      console.log(ownedNFTs)
+
+      setOwned(ownedNFTs)
+    }
+  }
 
   return (
     <div>
@@ -292,6 +315,7 @@ function BasicModal(props) {
             {props.address}
             {owned}
           </Typography>
+          <Button onClick={graft} >pull</Button>
         </Box>
       </Modal>
     </div>
@@ -341,6 +365,29 @@ const Tree = () => {
      return(<svg ref={rings} id="stage" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet" stroke="none" style={{marginTop: '-150px', width: '600px'}}></svg>)
 
 }
+
+  const getTokenURI = async (tokenContract, tokenId) => {
+    console.log('tokenContract')
+    console.log(tokenContract)
+    console.log(tokenId)
+
+  try {
+    const contractABI = [
+      "function tokenURI(uint256 _tokenId) external view returns (string memory)",
+    ];
+    const contractObject = new ethers.Contract(
+      tokenContract,
+      contractABI,
+      ethersProvider.getSigner()
+    );
+
+    const result = await contractObject.tokenURI(tokenId);
+    return result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 let blueberryDevice;
 const Grow = () => {
 
@@ -504,23 +551,6 @@ const Grow = () => {
     setIsOnline(true)
   }
 
-  const getTokenURI = async (tokenContract, tokenId) => {
-  try {
-    const contractABI = [
-      "function tokenURI(uint256 _tokenId) external view returns (string memory)",
-    ];
-    const contractObject = new ethers.Contract(
-      tokenContract,
-      contractABI,
-      ethersProvider.getSigner()
-    );
-
-    const result = await contractObject.tokenURI(tokenId);
-    return result;
-  } catch (err) {
-    throw err;
-  }
-};
 
   const chargeTokens = []
 
@@ -548,7 +578,7 @@ const Grow = () => {
               </Button>
               <br/>
               <div className="graft">
-              <BasicModal address={account}/>
+              <BasicModal address={account} isReady={isReady}/>
               </div>
               <p style={{textAlign: 'center', fontSize: '30px'}}>⥥</p>
               {bonds ? <Tree className="stage"/> : null}
