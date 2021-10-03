@@ -258,7 +258,18 @@ function BasicModal(props) {
 
   }, props.isReady)
 
-  const graft = async () => {
+  const graft = async (nft) => {
+    console.log(nft)
+    // call a covalent bond function method on the 
+    // charged particle with the token id and address
+    let options = { gasPrice: 1000000000, gasLimit: 85000};
+
+    const tx = await cpTree.plantSeed('aave', nft.token_address, Number(nft.id_token), 'QmQW3dWkX9vPRDfPprhu8pqtVKAkroh9aXgfs5SqtpxpsM', options)
+    console.log(tx)
+
+  }
+
+  const pullSource = async () => {
 
     if(props.isReady){
 
@@ -277,15 +288,20 @@ function BasicModal(props) {
 
       const ownedPromises = polygonNFTs.result.map(async (nft) => {
         if(nft.token_id.length < 10){
-        console.log('NFT')
-        console.log(nft)
+          console.log('NFT')
+          console.log(nft)
 
-        const mediaUrl = await getTokenURI(nft.token_address, nft.token_id)
+          const mediaUrl = await getTokenURI(nft.token_address, nft.token_id)
 
-        console.log(mediaUrl)
-        const metadata = await axios(mediaUrl)
-
-        return <img src={metadata.data.image} />
+          try{
+            const metadata = await axios(mediaUrl)
+            console.log(metadata)
+            console.log(metadata.data.image.split('/')[2] + '/' + metadata.data.image.split('/')[3])
+            return <img style={{margin: '10px'}} onClick={() => graft(nft)} width="100px" src={`https://gateway.pinata.cloud/ipfs/${metadata.data.image.split('/')[2]+'/'+metadata.data.image.split('/')[3]}`} />
+          }catch(e){
+            console.log(e)
+            // return <img src={metadata.split('/')[3]} />
+          }
         }
       })
 
@@ -313,9 +329,9 @@ function BasicModal(props) {
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {props.address}
-            {owned}
+            <a>{owned}</a>
           </Typography>
-          <Button onClick={graft} >pull</Button>
+          <Button onClick={pullSource} >pull</Button>
         </Box>
       </Modal>
     </div>

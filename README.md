@@ -26,6 +26,9 @@ Technologies used: hands, ritual, ethereum, polygon, charged particles, filecoin
 - Interface points
 - Schema Design
 
+### architecture
+![arbr_arch](arbr_arch.png)
+
 ### choose totem / tree
 ![choose](choose.png)
 
