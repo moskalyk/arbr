@@ -1,6 +1,7 @@
 import { init } from "@textile/eth-storage";
 
 class Fox {
+	// ~foxes~ stash
 	constructor(signer){
 		this.identity = signer
 		this.pouch = []
@@ -55,7 +56,7 @@ class Fox {
 		})
 
 		const hydration = Promise.all(hydratedPromises)
-		
+
 		return hydration;
 	}
 }
