@@ -1,16 +1,27 @@
 import { init } from "@textile/eth-storage";
-
+import axios from 'axios'
 class Fox {
 	// ~foxes~ stash
 	constructor(signer){
 		this.identity = signer
+		this.furLock = []
 		this.pouch = []
+		this.counter = 0
+		this.threshold = 10
+	}
+
+	/*
+		a pressure lock of windowed data
+	*/
+	async save(window){
+		if(this.window)
+		this.furlock.push(furLock)
 	}
 
 	/*
 		take a matrix agreggated from the faun p2p fluence service network
 	*/
-	snapshot(matrix){
+	async snapshot(matrix){
 		const blob = new Blob([JSON.stringify(matrix, null, 2)], {type : 'application/json'});
 		console.log(blob)
 

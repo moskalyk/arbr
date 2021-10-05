@@ -29,6 +29,10 @@ import 'react-vertical-timeline-component/style.min.css';
 
 import axios from 'axios'
 
+import Fox from './modules/Fox.js'
+import Faun from './modules/Faun.js'
+import Fog from './modules/Fog.js'
+
 // modal
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -416,13 +420,14 @@ const Grow = () => {
   const [isReady, setIsReady] = useState(false)
   const [totem, setTotem] = useState([])
   const [treeCount, setTreeCount] = useState(0)
+  const [fogForest, setFogForest] = useState(0)
   const [account, setAccount] = useState('')
 
   useEffect(async () => {
 
     setInterval(() => {
       // check to see that it is connected 
-      if(isOnline){
+      if(fox && isOnline){
         let new_data = blueberry.getData('880nm_850nm_27mm');
         console.log(new_data)
       }
@@ -560,11 +565,30 @@ const Grow = () => {
 
   const connectBluberry = async () => {
     console.log('connecting')
+    const fox = new Fox(ethersProvider.getSigner())
+
+    // 
+    const fog = new Fog(fox)
+
+    console.log(fog.compress())
+
+    //
     let blueberryDevice = new BlueberryDevice(connect_cb.bind(this), disconnect_cb.bind(this), try_connect_cb.bind(this))
+    const faun = new Faun(blueberry)
+
+    faun.consumer()
+    faun.on('lor', async (e) => {
+      console.log('LOR_EVENT')
+      console.log(e)
+      const cid = await fox.snapshot(e)
+      console.log(cid)
+    })
+
     console.log(blueberryDevice)
     blueberryDevice.start_connection();
     setBlueberry(blueberryDevice)
     setIsOnline(true)
+    setFogForest(fog)
   }
 
 

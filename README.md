@@ -29,6 +29,10 @@ Technologies used: hands, ritual, ethereum, polygon, charged particles, filecoin
 ### architecture
 ![arbr_arch](arbr_arch.png)
 
+### module composition
+![architecture](architecture.png)
+
+
 ### choose totem / tree
 ![choose](choose.png)
 

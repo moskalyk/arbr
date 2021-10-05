@@ -11,7 +11,7 @@ class Fog {
 	compress () {
 
 		// perform a read on the localized gather info
-		const matrix = this.fog.hydrate()
+		const matrix = this.fox.hydrate()
 
 		// load spectrum curation from the matrix into an fft bucket analyzer
 
