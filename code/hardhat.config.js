@@ -25,12 +25,14 @@ task("accounts", "Prints the list of accounts", async () => {
 // Replace this with your Infura project ID
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || '';
 const ALCHEMY_URL = `https://eth-kovan.alchemyapi.io/v2/qy_G_Y-BXfAv9yEslLEW3Prts9mpG-PG`;
+const POLYGON_MUMBAI_ALCHEMY_URL = `https://polygon-mumbai.g.alchemy.com/v2/hiZDNBevy64IDuhsWuNLJrj6qaKOl5h-`;
 
 // Replace this private key with your Ropsten account private key
 // To export your private key from Metamask, open Metamask and
 // go to Account Details > Export Private Key
 // Be aware of NEVER putting real Ether into testing accounts
 const KOVAN_PRIVATE_KEY = process.env.KOVAN_PRIVATE_KEY || '';
+const POLYGON_PRIVATE_KEY = process.env.POLYGON_PRIVATE_KEY || '';
 // const KOVAN_PRIVATE_KEY_B = process.env.KOVAN_PRIVATE_KEY_B || '';
 
 module.exports = {
@@ -38,13 +40,22 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: "https://eth-kovan.alchemyapi.io/v2/qy_G_Y-BXfAv9yEslLEW3Prts9mpG-PG"
+        url: "${POLYGON_ALCHEMY_URL}"
       }
     },
     kovan: {
       url: `${ALCHEMY_URL}`,
       saveDeployments: true,
       accounts: [`0x${KOVAN_PRIVATE_KEY}`],
+      gas: 12487794,
+      gasPrice: 10e10,
+      networkCheckTimeout: 500000000,
+      timeoutBlocks: 200
+    },
+    mumbai: {
+      url: `https://polygon-mumbai.g.alchemy.com/v2/hiZDNBevy64IDuhsWuNLJrj6qaKOl5h-`,
+      saveDeployments: true,
+      accounts: [`0x${POLYGON_PRIVATE_KEY}`],
       gas: 12487794,
       gasPrice: 10e10,
       networkCheckTimeout: 500000000,

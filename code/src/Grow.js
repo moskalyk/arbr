@@ -420,7 +420,8 @@ const Grow = () => {
   const [isReady, setIsReady] = useState(false)
   const [totem, setTotem] = useState([])
   const [treeCount, setTreeCount] = useState(0)
-  const [fogForest, setFogForest] = useState(0)
+  const [fogForest, setFogForest] = useState({})
+  const [fox, setFox] = useState({})
   const [account, setAccount] = useState('')
 
   useEffect(async () => {
@@ -430,6 +431,7 @@ const Grow = () => {
       if(fox && isOnline){
         let new_data = blueberry.getData('880nm_850nm_27mm');
         console.log(new_data)
+
       }
     }, 10)
 
@@ -565,11 +567,12 @@ const Grow = () => {
 
   const connectBluberry = async () => {
     console.log('connecting')
-    const fox = new Fox(ethersProvider.getSigner())
+    const newFox = new Fox(ethersProvider.getSigner())
 
     // 
     const fog = new Fog(fox)
 
+    setFox(newFox)
     console.log(fog.compress())
 
     //

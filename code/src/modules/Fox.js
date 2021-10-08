@@ -13,9 +13,16 @@ class Fox {
 	/*
 		a pressure lock of windowed data
 	*/
-	async save(window){
-		if(this.window)
-		this.furlock.push(furLock)
+	async snatch(window){
+		if(this.counter < this.threshold){
+			// this.furlock.push(furLock)
+			this.counter ++
+
+			// if(this.counter)
+		}else{
+			this.counter = 0
+			this.snapshot
+		}
 	}
 
 	/*
@@ -41,6 +48,13 @@ class Fox {
 		this.pouch.push(cid)
 
 		return cid
+	}
+
+	/*
+		checks to see if fox is online
+	*/
+	isOnline(){
+		return true
 	}
 
 	/*
