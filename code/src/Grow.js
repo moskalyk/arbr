@@ -29,8 +29,20 @@ import 'react-vertical-timeline-component/style.min.css';
 
 import axios from 'axios'
 
+// aqua
+// doc control
+import { getUpdatedDocFromText, initDoc, SyncClient } from '../aqua/app/sync';
+import { withErrorHandlingAsync } from './util';
+import { addEntry, getHistory, registerTextState } from '../aqua/_aqua/app';
+
+// user control
+import { initAfterJoin, updateOnlineStatuses } from 'src/_aqua/app';
+import { registerUserStatus } from 'src/_aqua/app';
+import { Fluence, FluencePeer, PeerIdB58 } from '@fluencelabs/fluence';
+
+// custom modules
 import Fox from './modules/Fox.js'
-import Faun from './modules/Faun.js'
+import Faun from './modules/Faun.ts'
 import Fog from './modules/Fog.js'
 
 // modal
@@ -426,11 +438,14 @@ const Grow = () => {
 
   useEffect(async () => {
 
+
+
     setInterval(() => {
       // check to see that it is connected 
       if(fox && isOnline){
         let new_data = blueberry.getData('880nm_850nm_27mm');
         console.log(new_data)
+
 
       }
     }, 10)
@@ -450,6 +465,10 @@ const Grow = () => {
           console.log('charging...')
         // get charge
       },1000)
+
+      // set faun
+
+      const faun = new Faun()
     }
 
     if(isReady){
