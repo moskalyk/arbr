@@ -26,24 +26,31 @@ import BlueberryDevice from './peripherals/BlueberryConnect.js'
 
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
+import CircularWave from './CircularWave.js'
 
 import axios from 'axios'
 
 // aqua
 // doc control
-import { getUpdatedDocFromText, initDoc, SyncClient } from '../aqua/app/sync';
-import { withErrorHandlingAsync } from './util';
-import { addEntry, getHistory, registerTextState } from '../aqua/_aqua/app';
+// import { getUpdatedDocFromText, initDoc, SyncClient } from './aqua/app/sync';
+// import { withErrorHandlingAsync } from './util';
+// import { addEntry, getHistory, registerTextState } from '../aqua/_aqua/app';
 
 // user control
-import { initAfterJoin, updateOnlineStatuses } from 'src/_aqua/app';
-import { registerUserStatus } from 'src/_aqua/app';
-import { Fluence, FluencePeer, PeerIdB58 } from '@fluencelabs/fluence';
+// import { initAfterJoin, updateOnlineStatuses } from 'src/_aqua/app';
+// import { registerUserStatus } from 'src/_aqua/app';
+// import { Fluence, FluencePeer, PeerIdB58 } from '@fluencelabs/fluence';
 
 // custom modules
 import Fox from './modules/Fox.js'
-import Faun from './modules/Faun.ts'
+import Faun from './modules/Faun.js'
 import Fog from './modules/Fog.js'
+
+import { Fluence } from '@fluencelabs/fluence';
+import { fluentPadApp, relayNode } from './aqua/app/constants';
+import { join, leave, registerAppConfig } from './aqua/_aqua/app';
+
+
 
 // modal
 import Box from '@mui/material/Box';
@@ -164,10 +171,11 @@ export const Wallet = (props) => {
       console.log(`use effect -- account: ${account}`)
       console.log(ethersProvider)
 
-      Moralis.authenticate().then(function (user) {
-          console.log('MORALIS_USER_ADDRESS')
-          console.log(user.get('ethAddress'))
-      })
+      // TODO: is this necessary?
+      // Moralis.authenticate().then(function (user) {
+      //     console.log('MORALIS_USER_ADDRESS')
+      //     console.log(user.get('ethAddress'))
+      // })
 
       if(ethersProvider){
       console.log(ethersProvider.getSigner())
@@ -421,6 +429,8 @@ const Tree = () => {
 };
 
 let blueberryDevice;
+let wave;
+
 const Grow = () => {
 
   const [particleValue, setParticleValue] = useState()
@@ -435,10 +445,34 @@ const Grow = () => {
   const [fogForest, setFogForest] = useState({})
   const [fox, setFox] = useState({})
   const [account, setAccount] = useState('')
+  const [recorder, setRecorder] = useState(false)
+  const [isConnected, setIsConnected] = useState(false);
+
+
+  const connect = async () => {
+        try {
+            await Fluence.start({ connectTo: relayNode });
+
+            setIsConnected(true);
+
+            registerAppConfig({
+                getApp: () => {
+                    return fluentPadApp
+                },
+            })
+        }
+        catch (err) {
+            console.log('Peer initialization failed', err)
+        }
+    }
+
 
   useEffect(async () => {
 
-
+    if(!isConnected) {
+      connect()
+      setIsConnected(true)
+    }
 
     setInterval(() => {
       // check to see that it is connected 
@@ -459,6 +493,22 @@ const Grow = () => {
     },1000)
 
     if(isOnline){
+      if(!recorder){
+        setRecorder(true)
+        const faun = new Faun()
+
+        setInterval(async () => {
+          await faun.record(Date.now())
+          console.log(faun.numbers())
+        }, 1000)
+
+        faun.on('lore', (note) => {
+          console.log('NEW_NOTE')
+          console.log(note)
+        })
+
+      }
+
       setInterval(async ()=>{
         // isSeeded
           setTreeCount(treeCount + 1)
@@ -468,7 +518,12 @@ const Grow = () => {
 
       // set faun
 
-      const faun = new Faun()
+
+
+    }
+
+    const play = () => {
+      wave.play()
     }
 
     if(isReady){
@@ -592,19 +647,19 @@ const Grow = () => {
     const fog = new Fog(fox)
 
     setFox(newFox)
-    console.log(fog.compress())
 
     //
     let blueberryDevice = new BlueberryDevice(connect_cb.bind(this), disconnect_cb.bind(this), try_connect_cb.bind(this))
     const faun = new Faun(blueberry)
 
-    faun.consumer()
-    faun.on('lor', async (e) => {
-      console.log('LOR_EVENT')
-      console.log(e)
-      const cid = await fox.snapshot(e)
-      console.log(cid)
-    })
+    // faun.consumer()
+
+    // faun.on('lor', async (e) => {
+    //   console.log('LOR_EVENT')
+    //   console.log(e)
+    //   const cid = await fox.snapshot(e)
+    //   console.log(cid)
+    // })
 
     console.log(blueberryDevice)
     blueberryDevice.start_connection();
@@ -643,7 +698,7 @@ const Grow = () => {
               <BasicModal address={account} isReady={isReady}/>
               </div>
               <p style={{textAlign: 'center', fontSize: '30px'}}>⥥</p>
-              {bonds ? <Tree className="stage"/> : null}
+              {bonds ? <Tree className="stage"/> : (isConnected ? <p>portal</p>: null)}
               <h2>🪵</h2>
               <VerticalTimeline styl={{width: '100%'}}>
                   {totem}

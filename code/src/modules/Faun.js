@@ -1,23 +1,23 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import { useEffect, useState } from 'react';
 
 // doc control
-import { getUpdatedDocFromText, initDoc, SyncClient } from '../app/sync';
-import { withErrorHandlingAsync } from './util';
-import { addEntry, getHistory, registerTextState } from 'src/_aqua/app';
+// import { getUpdatedDocFromText, initDoc, SyncClient } from '../aqua/app/sync';
+import { withErrorHandlingAsync } from '../utils/util.js';
+import { addEntry, registerTextState } from '../aqua/_aqua/app.js';
 
 // user control
-import { initAfterJoin, updateOnlineStatuses } from 'src/_aqua/app';
-import { registerUserStatus } from 'src/_aqua/app';
+import { initAfterJoin, updateOnlineStatuses } from '../aqua/_aqua/app.js';
+import { registerUserStatus } from '../aqua/_aqua/app';
 import { Fluence, FluencePeer, PeerIdB58 } from '@fluencelabs/fluence';
 const EventEmitter = require( 'events' );
 
 
-interface User {
-    id: PeerIdB58;
-    name: string;
-    isOnline: boolean;
-}
+// interface User {
+//     id: PeerIdB58;
+//     name: string;
+//     isOnline: boolean;
+// }
 
 // const updateOnlineStatus = (user, onlineStatus) => {
 //     setUsers((prev) => {
@@ -32,22 +32,22 @@ interface User {
 
 class Faun extends EventEmitter {
 
-    public client: SyncClient;
-    public peers: [any];
+    // public client: SyncClient;
+    // public peers: [any];
 
-    constructor(syncClient){
+    constructor(){
     	super()
-        this.client = syncClient;
-        this.peers = [{user: 'masterchief', isOnline:false}]
+        // this.client = syncClient;
+        this.peers = [{user: 'ethlorian', isOnline:false}]
 
 
-        this.client.start()
+        // this.client.start()
 
         //register on changes
         this.feed()
 
         //register userlist
-        this.surroundings()
+        // this.surroundings()
 
         //TODO: register compute size
 
@@ -55,28 +55,30 @@ class Faun extends EventEmitter {
 
     // list feed
     async feed(){
+        const self = this
         // register cid handler
         registerTextState({
             notifyTextUpdate: (changes, isAuthorized) => {
                 console.log('CHANGES')
                 if (changes) {
                     console.log(changes)
-                    this.emit('particle', changes)
-                    this.client.receiveChanges(changes);
+                    // self.emit('lore', changes)
+                    // this.client.receiveChanges(changes);
                 }
             }
         })
         try{
-            const res = await getHistory();
-                console.log('RES')
-                console.log(res)
-            for (let e of res.entries) {
-                this.client.receiveChanges(e.body);
-            }
+            // const res = await getHistory();
+                // console.log('RES')
+                // console.log(res)
+            // for (let e of res.entries) {
+            //     console.log(JSON.parse(e.body))
+            //     // this.client.receiveChanges(e.body);
+            // }
 
-            if (this.client.getDoc() === undefined) {
-                this.client.syncDoc(initDoc());
-            }
+            // if (this.client.getDoc() === undefined) {
+            //     this.client.syncDoc(initDoc());
+            // }
         }catch(e){
             console.log('error with feed')
             console.log(e)
@@ -89,11 +91,19 @@ class Faun extends EventEmitter {
     }
 
     // push a particle
-    record(cid){
-        setInterval(() => {
-            console.log('calling window')
-            broadcastUpdates(String(Math.random()), this.client)
-        }, 1000)
+    // push a particle
+    async record(cid){
+        console.log('calling window')
+        try{
+            const res = await addEntry(cid);
+            console.log(cid)
+
+        }catch(e){
+            console.log(e)
+            console.log('error sending change')
+        }
+
+            // broadcastUpdates(String(Math.random()), this.client)
     }
 
     // # of online peers
@@ -110,7 +120,7 @@ class Faun extends EventEmitter {
                 console.log('NEW_USER')
                 console.log(user)
                 console.log(isOnline)
-                self.peers.push({user: user, isOnline: isOnline});
+                // self.peers.push({user: user, isOnline: isOnline});
 
 
                 // setUsers((prev) => {
@@ -168,13 +178,13 @@ class Faun extends EventEmitter {
     }
 }
 
-const broadcastUpdates = _.debounce((text: string, syncClient: SyncClient) => {
-    let doc = syncClient.getDoc();
-    if (doc) {
-        let newDoc = getUpdatedDocFromText(doc, text);
-        syncClient.syncDoc(newDoc);
-    }
-}, 100);
+// const broadcastUpdates = _.debounce((text: string, syncClient: SyncClient) => {
+//     // let doc = syncClient.getDoc();
+//     if (doc) {
+//         let newDoc = getUpdatedDocFromText(doc, text);
+//         // syncClient.syncDoc(newDoc);
+//     }
+// }, 100);
 
 
 export default Faun;

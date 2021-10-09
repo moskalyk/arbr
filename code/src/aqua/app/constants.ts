@@ -1,4 +1,4 @@
-import config from 'src/app.json';
+import config from './app.json';
 import { krasnodar } from '@fluencelabs/fluence-network-environment';
 
 export const userList = {

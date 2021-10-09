@@ -21,7 +21,7 @@ class Fox {
 			// if(this.counter)
 		}else{
 			this.counter = 0
-			this.snapshot
+			// this.snapshot
 		}
 	}
 
