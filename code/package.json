@@ -23,6 +23,7 @@
     "compromise": "^13.11.4",
     "danfojs": "^0.2.8",
     "diff-match-patch": "^1.0.5",
+    "echarts": "^5.2.1",
     "fili": "^2.0.3",
     "graphql": "^15.5.1",
     "graphql-request": "^3.5.0",

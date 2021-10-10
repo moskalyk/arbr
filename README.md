@@ -2,6 +2,7 @@
 
 terraform APIs for 1/1 Earth. have your computer. use the door.
 
+![logo](logo.png)
 ![landing](landing.png)
 ![globe](globe.png)
 

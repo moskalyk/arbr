@@ -13,15 +13,14 @@ class Fox {
 	/*
 		a pressure lock of windowed data
 	*/
-	async snatch(window){
+	async snatch(blueberryWindow){
 		if(this.counter < this.threshold){
-			// this.furlock.push(furLock)
+			this.furLock.push(blueberryWindow)
 			this.counter ++
-
-			// if(this.counter)
 		}else{
+			await this.snapshot(this.furlock)
 			this.counter = 0
-			// this.snapshot
+			this.furlock = []
 		}
 	}
 
@@ -74,6 +73,7 @@ class Fox {
 		hydrate from ipfs using the pouch of cids to be consumed by fog
 	*/
 	hydrate(){
+		// hydrate a pouch of CID blueberry window recordings
 		const hydratedPromises = this.pouch.map(async (cid) => {
 			// some axios to an IPFS pinata gateway
 			const data = await axios(cid)

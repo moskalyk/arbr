@@ -18,7 +18,7 @@ import { abi as IErc20 } from './abis/erc20.json'
 import { abi as CPTree } from './abis/cptree.json'
 
 // react modules
-import {useState, useRef, useEffect} from 'react'
+import React, { useState, useEffect, useRef } from 'react';
 import { request, gql } from 'graphql-request';
 import { Link, useHistory } from 'react-router-dom'
 
@@ -364,6 +364,7 @@ function BasicModal(props) {
 
 const Tree = () => {
   const rings = useRef();
+  const [treeRise, setTreeRise] = useState(false)
 
   useEffect(() => {
 
@@ -371,34 +372,38 @@ const Tree = () => {
     //   nPoly=nPoly
     // }, 2000, nPoly)
 
-  for (let i=1; i<=nPoly; i++){ //make + animate empty polygon elements
-    let p = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-    let stage = document.getElementById("stage");
-    stage.appendChild(p);  
+    if(!treeRise) {
+      for (let i=1; i<=nPoly; i++){ //make + animate empty polygon elements
+        let p = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        let stage = document.getElementById("stage");
+        stage.appendChild(p);  
 
-  
-    gsap.set(p, {
-      attr:{ class:'p p'+i },
-      scale:0,
-      x:250,
-      y:250,
-      fill:'none',
-      // fill:()=>(i%2==0)?'#fff':'#000',
-      stroke:'green',
-      strokeWidth:1+Math.random()
-    });
-    
-    gsap
-      .timeline({ repeat:-1 })
-      .to(p, {
-        duration:4+i/getRings()*3,
-        scale:0.5,
-        ease:'expo'
-      })
-      .seek(9)
-  }
+      
+        gsap.set(p, {
+          attr:{ class:'p p'+i },
+          scale:0,
+          x:250,
+          y:250,
+          fill:'none',
+          // fill:()=>(i%2==0)?'#fff':'#000',
+          stroke:'green',
+          strokeWidth:1+Math.random()
+        });
+        
+        gsap
+          .timeline({ repeat:-1 })
+          .to(p, {
+            duration:4+i/getRings()*3,
+            scale:0.5,
+            ease:'expo'
+          })
+          .seek(9)
+      }
 
-    gsap.to(window, {duration:1.5, repeat:-1, onStart:setPts, onRepeat:setPts});
+        gsap.to(window, {duration:1.5, repeat:-1, onStart:setPts, onRepeat:setPts});
+
+      setTreeRise(true)
+    }
 
   })
 
@@ -430,6 +435,31 @@ const Tree = () => {
 
 let blueberryDevice;
 let wave;
+
+const TREE_FLOW_METRIC = 1 / 256 // 1 / 256 kbytes
+
+// custom interval function to make arguments dynamic
+// SOURCE: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
 
 const Grow = () => {
 
@@ -466,6 +496,12 @@ const Grow = () => {
         }
     }
 
+    useInterval(()=>{
+      // isSeeded
+        setTreeCount(treeCount + 1) // scale this based on dynamic flow rate of compute size
+        console.log('charging...')
+      // get charge
+    },1000)
 
   useEffect(async () => {
 
@@ -477,10 +513,16 @@ const Grow = () => {
     setInterval(() => {
       // check to see that it is connected 
       if(fox && isOnline){
-        let new_data = blueberry.getData('880nm_850nm_27mm');
-        console.log(new_data)
+        let lightWindow = blueberry.getData('880nm_850nm_27mm');
+        console.log(lightWindow)
 
 
+        fox.snatch(lightWindow)
+
+      }else{
+        // console.log("NOT_ONLINE")
+        // console.log(fox)
+        // console.log(isOnline)
       }
     }, 10)
 
@@ -495,31 +537,19 @@ const Grow = () => {
     if(isOnline){
       if(!recorder){
         setRecorder(true)
-        const faun = new Faun()
+        // const faun = new Faun()
 
-        setInterval(async () => {
-          await faun.record(Date.now())
-          console.log(faun.numbers())
-        }, 1000)
+        // setInterval(async () => {
+        //   await faun.record(Date.now())
+        //   console.log(faun.numbers())
+        // }, 1000)
 
-        faun.on('lore', (note) => {
-          console.log('NEW_NOTE')
-          console.log(note)
-        })
+        // faun.on('lore', (note) => {
+        //   console.log('NEW_NOTE')
+        //   console.log(note)
+        // })
 
       }
-
-      setInterval(async ()=>{
-        // isSeeded
-          setTreeCount(treeCount + 1)
-          console.log('charging...')
-        // get charge
-      },1000)
-
-      // set faun
-
-
-
     }
 
     const play = () => {
@@ -641,31 +671,33 @@ const Grow = () => {
 
   const connectBluberry = async () => {
     console.log('connecting')
+    alert('howdie')
     const newFox = new Fox(ethersProvider.getSigner())
+    const blueberryDevice = new BlueberryDevice(connect_cb.bind(this), disconnect_cb.bind(this), try_connect_cb.bind(this))
 
-    // 
+    // fox connects to the cosmic fog
     const fog = new Fog(fox)
 
-    setFox(newFox)
-
-    //
-    let blueberryDevice = new BlueberryDevice(connect_cb.bind(this), disconnect_cb.bind(this), try_connect_cb.bind(this))
+    // faun consums a blueberry
     const faun = new Faun(blueberry)
 
-    // faun.consumer()
+    // faun emits lore from surrounding peers
+    faun.on('lore', async (e) => {
+      console.log('LOR_EVENT')
+      console.log(e)
 
-    // faun.on('lor', async (e) => {
-    //   console.log('LOR_EVENT')
-    //   console.log(e)
-    //   const cid = await fox.snapshot(e)
-    //   console.log(cid)
-    // })
+      // fox snatches blueberry CID signatures
+      const cid = await fox.snatch(e)
+      console.log(cid)
+    })
 
-    console.log(blueberryDevice)
+    // TODO: maybe move into faun 
     blueberryDevice.start_connection();
+
     setBlueberry(blueberryDevice)
-    setIsOnline(true)
+    setFox(newFox)
     setFogForest(fog)
+    setIsOnline(true) // extremely ON
   }
 
 
@@ -698,7 +730,7 @@ const Grow = () => {
               <BasicModal address={account} isReady={isReady}/>
               </div>
               <p style={{textAlign: 'center', fontSize: '30px'}}>⥥</p>
-              {bonds ? <Tree className="stage"/> : (isConnected ? <p>portal</p>: null)}
+              {bonds && isOnline ? <Tree className="stage"/> : <CircularWave />}
               <h2>🪵</h2>
               <VerticalTimeline styl={{width: '100%'}}>
                   {totem}
