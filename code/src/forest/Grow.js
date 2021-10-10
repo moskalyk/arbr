@@ -14,42 +14,30 @@ import { ethers } from "ethers";
 import { useWeb3React } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { parseUnits, formatUnits, formatEther } from "@ethersproject/units";
-import { abi as IErc20 } from './abis/erc20.json'
-import { abi as CPTree } from './abis/cptree.json'
+import { abi as IErc20 } from '../abis/erc20.json'
+import { abi as CPTree } from '../abis/cptree.json'
 
 // react modules
 import React, { useState, useEffect, useRef } from 'react';
 import { request, gql } from 'graphql-request';
 import { Link, useHistory } from 'react-router-dom'
 
-import BlueberryDevice from './peripherals/BlueberryConnect.js'
+import BlueberryDevice from '../peripherals/BlueberryConnect.js'
 
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import CircularWave from './CircularWave.js'
 
 import axios from 'axios'
 
-// aqua
-// doc control
-// import { getUpdatedDocFromText, initDoc, SyncClient } from './aqua/app/sync';
-// import { withErrorHandlingAsync } from './util';
-// import { addEntry, getHistory, registerTextState } from '../aqua/_aqua/app';
-
-// user control
-// import { initAfterJoin, updateOnlineStatuses } from 'src/_aqua/app';
-// import { registerUserStatus } from 'src/_aqua/app';
-// import { Fluence, FluencePeer, PeerIdB58 } from '@fluencelabs/fluence';
-
-// custom modules
-import Fox from './modules/Fox.js'
-import Faun from './modules/Faun.js'
-import Fog from './modules/Fog.js'
+// custom module order, might be OFF
+import Fox from './classes/Fox.js'
+import RadialHeart from './RadialHeart.js'
+import Fog from './classes/Fog.js'
+import Faun from './classes/Faun.js'
 
 import { Fluence } from '@fluencelabs/fluence';
-import { fluentPadApp, relayNode } from './aqua/app/constants';
-import { join, leave, registerAppConfig } from './aqua/_aqua/app';
-
+import { fluentPadApp, relayNode } from '../aqua/app/constants';
+import { join, leave, registerAppConfig } from '../aqua/_aqua/app';
 
 
 // modal
@@ -79,12 +67,37 @@ const style = {
 // gsap
 
 let pts, nPts = gsap.utils.random(9,11,1)
-
 let nPoly = 5
 let radius = 180
 
 let ethersProvider;
 
+let blueberryDevice;
+let wave;
+
+const TREE_FLOW_METRIC = 1 / 256 // 1 / 256 kbytes
+
+// custom interval function to make arguments dynamic
+// SOURCE: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
 
 
 function getRings(){
@@ -362,7 +375,7 @@ function BasicModal(props) {
   );
 }
 
-const Tree = () => {
+const Tree = (props) => {
   const rings = useRef();
   const [treeRise, setTreeRise] = useState(false)
 
@@ -376,6 +389,7 @@ const Tree = () => {
       for (let i=1; i<=nPoly; i++){ //make + animate empty polygon elements
         let p = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         let stage = document.getElementById("stage");
+        console.log(props.clock)
         stage.appendChild(p);  
 
       
@@ -407,7 +421,17 @@ const Tree = () => {
 
   })
 
-     return(<svg ref={rings} id="stage" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet" stroke="none" style={{marginTop: '-150px', width: '600px'}}></svg>)
+     return(
+       <div>
+         {
+           props.clock == 'tree'
+             ? 
+               <svg ref={rings} id="stage" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet" stroke="none" style={{marginTop: '-150px', width: '600px'}}></svg>
+             :
+               null
+         }
+       </div>
+       )
 
 }
 
@@ -433,34 +457,6 @@ const Tree = () => {
   }
 };
 
-let blueberryDevice;
-let wave;
-
-const TREE_FLOW_METRIC = 1 / 256 // 1 / 256 kbytes
-
-// custom interval function to make arguments dynamic
-// SOURCE: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
-
 const Grow = () => {
 
   const [particleValue, setParticleValue] = useState()
@@ -472,11 +468,14 @@ const Grow = () => {
   const [isReady, setIsReady] = useState(false)
   const [totem, setTotem] = useState([])
   const [treeCount, setTreeCount] = useState(0)
+  const [surroundingOnlineNumbers, setSurroundingOnlineNumbers] = useState(0)
   const [fogForest, setFogForest] = useState({})
   const [fox, setFox] = useState({})
+  const [faun, setFaun] = useState(null)
   const [account, setAccount] = useState('')
   const [recorder, setRecorder] = useState(false)
   const [isConnected, setIsConnected] = useState(false);
+  const [clockType, setClockType] = useState('tree');
 
 
   const connect = async () => {
@@ -492,7 +491,8 @@ const Grow = () => {
             })
         }
         catch (err) {
-            console.log('Peer initialization failed', err)
+            console.log('PEER_INITIALIZATION_FAILED')
+            console.log(err)
         }
     }
 
@@ -506,7 +506,8 @@ const Grow = () => {
   useEffect(async () => {
 
     if(!isConnected) {
-      connect()
+      console.log('CONNECTING_TO_FLUENCE')
+      await connect()
       setIsConnected(true)
     }
 
@@ -539,10 +540,11 @@ const Grow = () => {
         setRecorder(true)
         // const faun = new Faun()
 
-        // setInterval(async () => {
-        //   await faun.record(Date.now())
-        //   console.log(faun.numbers())
-        // }, 1000)
+        setInterval(async () => {
+          console.log('NUM_ONLINE')
+          console.log(faun.numbers())
+          setSurroundingOnlineNumbers(faun.numbers())
+        }, 1000)
 
         // faun.on('lore', (note) => {
         //   console.log('NEW_NOTE')
@@ -611,7 +613,7 @@ const Grow = () => {
       console.log('NOT_READY')
     }
 
-  },[blueberry, isSeeded, ethersProvider, isReady, treeCount])
+  },[blueberry, isSeeded, ethersProvider, isReady, treeCount, surroundingOnlineNumbers])
 
   const query = gql`
       {
@@ -669,9 +671,9 @@ const Grow = () => {
     console.log('Connecting...')
   }
 
-  const connectBluberry = async () => {
+  const connectBlueberry = async () => {
     console.log('connecting')
-    alert('howdie')
+    // new fox connected
     const newFox = new Fox(ethersProvider.getSigner())
     const blueberryDevice = new BlueberryDevice(connect_cb.bind(this), disconnect_cb.bind(this), try_connect_cb.bind(this))
 
@@ -691,13 +693,17 @@ const Grow = () => {
       console.log(cid)
     })
 
+
+
     // TODO: maybe move into faun 
     blueberryDevice.start_connection();
 
     setBlueberry(blueberryDevice)
     setFox(newFox)
     setFogForest(fog)
+    setFaun(faun)
     setIsOnline(true) // extremely ON
+    setClockType('radial-aura')
   }
 
 
@@ -722,7 +728,7 @@ const Grow = () => {
                 (A) Seed
               </Button>
               <TextField id="standard-basic" value={particleValue} label="charge" style={{ height: '33px !important', margin: '10px'}}onChange={e => setParticleValue(e.target.value)}/>
-              <Button variant="outlined" onClick={connectBluberry} style={{ padding: '20px', margin: '10px'}}>
+              <Button variant="outlined" onClick={connectBlueberry} style={{ padding: '20px', margin: '10px'}}>
                 (B) Connect
               </Button>
               <br/>
@@ -730,12 +736,12 @@ const Grow = () => {
               <BasicModal address={account} isReady={isReady}/>
               </div>
               <p style={{textAlign: 'center', fontSize: '30px'}}>⥥</p>
-              {bonds && isOnline ? <Tree className="stage"/> : <CircularWave />}
+              {bonds && !isOnline ? <Tree clock={clockType} className="stage"/> : <RadialHeart clock={clockType}/>}
               <h2>🪵</h2>
               <VerticalTimeline styl={{width: '100%'}}>
                   {totem}
               </VerticalTimeline>
-              <Footer online={isOnline} onlineCount={1} treeCount={treeCount} mb={342}/>
+              <Root online={isOnline} onlineCount={surroundingOnlineNumbers} treeCount={treeCount} mb={342}/>
             </Grid>
           </Grid>
 
@@ -766,7 +772,7 @@ const Totem = (props) => {
     )
 }
 
-const Footer = (props) => {
+const Root = (props) => {
   console.log(props)
 
   const onlineCount = 3

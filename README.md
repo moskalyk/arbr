@@ -3,6 +3,10 @@
 terraform APIs for 1/1 Earth. have your computer. use the door.
 
 ![logo](logo.png)
+
+#### logo insipiration
+The tourquise orb (meant to represent a color of predicting evil) symbolizes a type of cyclical hand that churns in grey area etheric realms, undoing the axis of evil, like that which has done to our climate. Through coherence of curated NFT material bonded to the logs of tree reforestation projects, might we begin to terraform earths resources & idealized futures like solarpunk
+
 ![landing](landing.png)
 ![globe](globe.png)
 

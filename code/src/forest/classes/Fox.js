@@ -7,7 +7,7 @@ class Fox {
 		this.furLock = []
 		this.pouch = []
 		this.counter = 0
-		this.threshold = 10
+		this.threshold = 14400
 	}
 
 	/*

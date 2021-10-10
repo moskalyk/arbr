@@ -13,7 +13,7 @@ import './App.css'
 const polygonsMaterial = new THREE.MeshLambertMaterial({ color: 'darkslategrey', side: THREE.DoubleSide });
 
 
-const App = () => {
+const Arbr = () => {
 
 const N = 300;
   const gData = [...Array(N).keys()].map(() => ({
@@ -40,6 +40,7 @@ const N = 300;
        <div className="header" style={{textAlign: 'center', fontSize: '69px', fontFamily: 'Univers'}}>
            <img src={arbr} />
            <p style={{color: '#707070'}}>terraform APIs for 1/1 Earth</p>
+             {/* get them a computer. one that's clever. use the door. */}
             <h1 className="title" onClick={() => history.push(`/choose`)}><a href="" style={{textDecoration: 'none'}}>🚪</a></h1>
        </div>
       <Globe
@@ -55,4 +56,4 @@ const N = 300;
     )
 }
 
-export default App;
+export default Arbr;

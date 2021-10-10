@@ -3,32 +3,15 @@ import { useEffect, useState } from 'react';
 
 // doc control
 // import { getUpdatedDocFromText, initDoc, SyncClient } from '../aqua/app/sync';
-import { withErrorHandlingAsync } from '../utils/util.js';
-import { addEntry, registerTextState } from '../aqua/_aqua/app.js';
+import { withErrorHandlingAsync } from '../../utils/util.js';
+import { addEntry, registerTextState } from '../../aqua/_aqua/app.js';
 
 // user control
-import { initAfterJoin, updateOnlineStatuses } from '../aqua/_aqua/app.js';
-import { registerUserStatus } from '../aqua/_aqua/app';
+import { initAfterJoin, updateOnlineStatuses } from '../../aqua/_aqua/app.js';
+import { registerUserStatus } from '../../aqua/_aqua/app';
 import { Fluence, FluencePeer, PeerIdB58 } from '@fluencelabs/fluence';
 const EventEmitter = require( 'events' );
 
-
-// interface User {
-//     id: PeerIdB58;
-//     name: string;
-//     isOnline: boolean;
-// }
-
-// const updateOnlineStatus = (user, onlineStatus) => {
-//     setUsers((prev) => {
-//         const result = new Map(prev);
-//         const u = result.get(user);
-//         if (u) {
-//             result.set(user, { ...u, isOnline: onlineStatus });
-//         }
-//         return result;
-//     });
-// };
 
 class Faun extends EventEmitter {
 
@@ -47,7 +30,7 @@ class Faun extends EventEmitter {
         this.feed()
 
         //register userlist
-        // this.surroundings()
+        this.surroundings()
 
         //TODO: register compute size
 
@@ -87,7 +70,7 @@ class Faun extends EventEmitter {
 
     // file size calculator
     examine(cidList){
-
+        // TODO: create service in fluence
     }
 
     // push a particle

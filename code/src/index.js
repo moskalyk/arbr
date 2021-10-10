@@ -7,7 +7,7 @@ import './fonts/univers_else_regular/UniversElse-Regular.ttf';
 import App from './App';
 import About from './About';
 import Choose from './Choose';
-import Grow from './Grow';
+import Grow from './forest/Grow';
 
 
 import {
