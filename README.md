@@ -18,7 +18,7 @@ let this be a queued-up snapshot into current progress of this project for where
 
 all these projects will converge on the arbr protocol in a simplified smart contract implementation, with a prime focus on eth(OS)tep.
 
-Technologies used: hands, ritual, ethereum, polygon, charged particles, filecoin, fluence network
+Technologies used: hands, ritual, ethereum, _/^^(ツ)_/¯, charged particles, filecoin, fluence network
 
 ## user stories:
 
